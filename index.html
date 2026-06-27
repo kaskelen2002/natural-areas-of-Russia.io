@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/style.css">
+  </head>
+
+  <body>
+    <!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Природные зоны России</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f4f7f9;
+    color:#333;
+}
+
+header{
+    background:#1b5e20;
+    color:white;
+    text-align:center;
+    padding:25px;
+}
+
+section{
+    max-width:1000px;
+    margin:20px auto;
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+h2{
+    margin-bottom:15px;
+    color:#1b5e20;
+}
+
+.map{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.zone{
+    border:none;
+    color:white;
+    padding:18px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:16px;
+    transition:0.3s;
+}
+
+.zone:hover{
+    transform:scale(1.05);
+}
+
+.tundra{background:#4fc3f7;}
+.taiga{background:#2e7d32;}
+.forest{background:#66bb6a;}
+.steppe{background:#f9a825;}
+.desert{background:#ef6c00;}
+
+#info{
+    background:#eef7ee;
+    border-left:5px solid #2e7d32;
+    padding:15px;
+    border-radius:6px;
+    min-height:80px;
+}
+
+.quiz-question{
+    margin-bottom:15px;
+    font-size:18px;
+    font-weight:bold;
+}
+
+.answer{
+    display:block;
+    width:100%;
+    text-align:left;
+    margin:8px 0;
+    padding:12px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    background:#e8f5e9;
+}
+
+.answer:hover{
+    background:#c8e6c9;
+}
+
+.correct{
+    background:#4caf50 !important;
+    color:white;
+}
+
+.wrong{
+    background:#e53935 !important;
+    color:white;
+}
+
+#nextBtn{
+    margin-top:15px;
+    padding:10px 20px;
+    border:none;
+    background:#1b5e20;
+    color:white;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+#result{
+    margin-top:20px;
+    font-size:22px;
+    font-weight:bold;
+    color:#1b5e20;
+}
+
+.map-controls{
+    display:flex;
+    gap:10px;
+    margin-bottom:10px;
+}
+
+.map-controls button{
+    border:none;
+    border-radius:6px;
+    background:#1b5e20;
+    color:white;
+    font-size:18px;
+    width:40px;
+    height:40px;
+    cursor:pointer;
+}
+
+.map-controls button:hover{
+    background:#2e7d32;
+}
+
+.map-controls button.reset{
+    width:auto;
+    padding:0 16px;
+    font-size:14px;
+}
+
+.map-frame{
+    overflow:hidden;
+    border:2px solid #1b5e20;
+    border-radius:10px;
+    height:550px;
+    background:#eef7ee;
+    cursor:default;
+}
+
+.map-frame.zoomed{
+    cursor:grab;
+}
+
+.map-frame.zoomed.dragging{
+    cursor:grabbing;
+}
+
+.map-frame img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    transform-origin:0 0;
+    user-select:none;
+    pointer-events:none;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Интерактивная карта природных зон России</h1>
+    <p>Изучайте природные зоны и проверьте свои знания!</p>
+</header>
+
+<section>
+    <h2>Карта природных зон России</h2>
+
+    <div class="map-controls">
+        <button id="zoomInBtn" type="button" title="Увеличить">+</button>
+        <button id="zoomOutBtn" type="button" title="Уменьшить">&minus;</button>
+        <button id="zoomResetBtn" class="reset" type="button">Сбросить масштаб</button>
+    </div>
+
+    <div class="map-frame" id="mapFrame">
+        <img id="mapImage" src="%D0%9A%D0%B0%D1%80%D1%82%D0%B0%20%D0%BF%D1%80%D0%B8%D1%80%D0%BE%D0%B4%D0%BD%D1%8B%D1%85%20%D0%B7%D0%BE%D0%BD%20%D0%A0%D0%BE%D1%81%D1%81%D0%B8%D0%B8.JPG" alt="Карта природных зон России">
+    </div>
+</section>
+
+<section>
+    <h2>Зоны на карте</h2>
+
+    <div class="map">
+        <button class="zone tundra" onclick="showInfo('tundra')">Тундра</button>
+        <button class="zone taiga" onclick="showInfo('taiga')">Тайга</button>
+        <button class="zone forest" onclick="showInfo('forest')">Смешанные леса</button>
+        <button class="zone steppe" onclick="showInfo('steppe')">Степи</button>
+        <button class="zone desert" onclick="showInfo('desert')">Полупустыни</button>
+    </div>
+
+    <div id="info">
+        Нажмите на название природной зоны для получения информации.
+    </div>
+</section>
+
+<section>
+    <h2>Викторина</h2>
+
+    <div id="quiz">
+        <div class="quiz-question" id="question"></div>
+        <div id="answers"></div>
+        <button id="nextBtn">Следующий вопрос</button>
+        <div id="result"></div>
+    </div>
+</section>
+
+<script>
+const zones = {
+    tundra:
+    "<b>Тундра</b><br>Находится на крайнем севере России. Климат холодный, деревьев почти нет. Распространены мхи, лишайники и карликовые кустарники.",
+
+    taiga:
+    "<b>Тайга</b><br>Самая большая природная зона России. Здесь растут хвойные леса: сосна, ель, кедр, лиственница.",
+
+    forest:
+    "<b>Смешанные леса</b><br>Сочетают хвойные и лиственные породы деревьев. Климат мягче, чем в тайге.",
+
+    steppe:
+    "<b>Степь</b><br>Безлесные пространства с богатой травянистой растительностью. Почвы очень плодородны.",
+
+    desert:
+    "<b>Полупустыни</b><br>Расположены на юге России. Климат сухой и жаркий, растительность редкая."
+};
+
+function showInfo(zone){
+    document.getElementById("info").innerHTML = zones[zone];
+}
+
+(function(){
+    const frame = document.getElementById("mapFrame");
+    const img = document.getElementById("mapImage");
+
+    const minScale = 1;
+    const maxScale = 5;
+    let scale = 1;
+    let translateX = 0;
+    let translateY = 0;
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+
+    function applyTransform(){
+        img.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+        frame.classList.toggle("zoomed", scale > 1);
+    }
+
+    function zoomBy(factor){
+        scale = Math.min(maxScale, Math.max(minScale, scale * factor));
+        if(scale === minScale){
+            translateX = 0;
+            translateY = 0;
+        }
+        applyTransform();
+    }
+
+    document.getElementById("zoomInBtn").addEventListener("click", () => zoomBy(1.25));
+    document.getElementById("zoomOutBtn").addEventListener("click", () => zoomBy(0.8));
+    document.getElementById("zoomResetBtn").addEventListener("click", () => {
+        scale = minScale;
+        translateX = 0;
+        translateY = 0;
+        applyTransform();
+    });
+
+    frame.addEventListener("wheel", (e) => {
+        e.preventDefault();
+        zoomBy(e.deltaY < 0 ? 1.1 : 0.9);
+    }, { passive:false });
+
+    frame.addEventListener("mousedown", (e) => {
+        if(scale === minScale) return;
+        isDragging = true;
+        frame.classList.add("dragging");
+        startX = e.clientX - translateX;
+        startY = e.clientY - translateY;
+    });
+
+    window.addEventListener("mousemove", (e) => {
+        if(!isDragging) return;
+        translateX = e.clientX - startX;
+        translateY = e.clientY - startY;
+        applyTransform();
+    });
+
+    window.addEventListener("mouseup", () => {
+        isDragging = false;
+        frame.classList.remove("dragging");
+    });
+
+    frame.addEventListener("touchstart", (e) => {
+        if(scale === minScale || e.touches.length !== 1) return;
+        isDragging = true;
+        startX = e.touches[0].clientX - translateX;
+        startY = e.touches[0].clientY - translateY;
+    }, { passive:true });
+
+    frame.addEventListener("touchmove", (e) => {
+        if(!isDragging) return;
+        translateX = e.touches[0].clientX - startX;
+        translateY = e.touches[0].clientY - startY;
+        applyTransform();
+    }, { passive:true });
+
+    frame.addEventListener("touchend", () => {
+        isDragging = false;
+    });
+})();
+
+const quizData = [
+{
+question:"Какая природная зона занимает наибольшую площадь в России?",
+answers:["Тундра","Тайга","Степь","Полупустыня"],
+correct:1
+},
+{
+question:"В какой зоне практически отсутствуют деревья?",
+answers:["Тундра","Тайга","Лес","Смешанный лес"],
+correct:0
+},
+{
+question:"Где находятся самые плодородные почвы?",
+answers:["Степь","Тундра","Тайга","Полупустыня"],
+correct:0
+},
+{
+question:"Какие деревья преобладают в тайге?",
+answers:["Берёзы","Пальмы","Хвойные","Дубы"],
+correct:2
+},
+{
+question:"Какая зона расположена на крайнем севере России?",
+answers:["Степь","Тундра","Лес","Полупустыня"],
+correct:1
+}
+];
+
+let current = 0;
+let score = 0;
+
+const questionEl = document.getElementById("question");
+const answersEl = document.getElementById("answers");
+const resultEl = document.getElementById("result");
+const nextBtn = document.getElementById("nextBtn");
+
+function loadQuestion(){
+    let q = quizData[current];
+
+    questionEl.textContent = q.question;
+    answersEl.innerHTML = "";
+
+    q.answers.forEach((answer,index)=>{
+        const btn = document.createElement("button");
+        btn.className = "answer";
+        btn.textContent = answer;
+
+        btn.onclick = () => checkAnswer(index, btn);
+
+        answersEl.appendChild(btn);
+    });
+}
+
+function checkAnswer(index, btn){
+    const correct = quizData[current].correct;
+
+    document.querySelectorAll(".answer").forEach(b=>{
+        b.disabled = true;
+    });
+
+    if(index === correct){
+        btn.classList.add("correct");
+        score++;
+    } else {
+        btn.classList.add("wrong");
+        document.querySelectorAll(".answer")[correct]
+            .classList.add("correct");
+    }
+}
+
+nextBtn.addEventListener("click", ()=>{
+
+    current++;
+
+    if(current < quizData.length){
+        loadQuestion();
+    } else {
+        questionEl.textContent = "";
+        answersEl.innerHTML = "";
+        nextBtn.style.display = "none";
+
+        resultEl.innerHTML =
+        `Ваш результат: ${score} из ${quizData.length} баллов`;
+    }
+});
+
+loadQuestion();
+</script>
+
+</body>
+</html>
+    <script src="/script.js"></script>
+  </body>
+
+</html>
